@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
   public float speed;
-  private Rigidbody rb;
+  private Rigidbody _body;
   public Camera targetCamera;
+  private Vector3 _inputs = Vector3.zero;
 
   private void AlignToCamera()
   {
@@ -19,22 +20,29 @@ public class PlayerController : MonoBehaviour
 
   void Start()
   {
-    rb = GetComponent<Rigidbody>();
+    _body = GetComponent<Rigidbody>();
   }
 
   void Update()
   {
-    // AlignToCamera();
+    _inputs = Vector3.zero;
+    _inputs.x = Input.GetAxis("Horizontal");
+    _inputs.z = Input.GetAxis("Vertical");
+    if (_inputs != Vector3.zero)
+      transform.forward = _inputs;
   }
 
   void FixedUpdate()
   {
-    float moveHorizontal = Input.GetAxis("Horizontal");
-    float moveVertical = Input.GetAxis("Vertical");
-    Vector3 input = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
-    transform.position += input * speed * Time.deltaTime;
+    // _body.MovePosition(_body.position + _inputs * speed * Time.fixedDeltaTime);
+    Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
 
-    AlignToCamera();
+    direction = Camera.main.transform.TransformDirection(direction);
+    direction.y = 0.0f;
+
+    transform.position += Vector3.Normalize(direction);
+
+    // AlignToCamera();
   }
 }
