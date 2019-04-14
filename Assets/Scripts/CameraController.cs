@@ -17,13 +17,14 @@ public class CameraController : MonoBehaviour
     if (target == null)
       Debug.LogWarning("We do not have a target.");
     _myTransform = transform;
+    CameraSetup();
   }
 
   void LateUpdate()
   {
 
     x += Input.GetAxis("Mouse X") * xSpeed * .02f;
-    y += Input.GetAxis("Mouse X") * ySpeed * .02f;
+    y -= Input.GetAxis("Mouse Y") * ySpeed * .02f;
 
     // y = ClampAngle(y, yMinLimit, yMaxLimit);
 
@@ -32,14 +33,16 @@ public class CameraController : MonoBehaviour
 
     transform.rotation = rotation;
     transform.position = position;
+  }
 
+  public void CameraSetup()
+  {
+    _myTransform.position = new Vector3(
+      target.position.x,
+      target.position.y + height,
+      target.position.z - offsetDistance
+    );
 
-    // _myTransform.position = new Vector3(
-    //   target.position.x,
-    //   target.position.y + height,
-    //   target.position.z - offsetDistance
-    // );
-
-    // _myTransform.LookAt(target);
+    _myTransform.LookAt(target);
   }
 }
