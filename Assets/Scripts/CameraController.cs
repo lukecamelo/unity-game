@@ -16,6 +16,7 @@ public class CameraController : MonoBehaviour
   {
     if (target == null)
       Debug.LogWarning("We do not have a target.");
+
     _myTransform = transform;
     CameraSetup();
   }
@@ -31,6 +32,8 @@ public class CameraController : MonoBehaviour
     Quaternion rotation = Quaternion.Euler(y, x, 0);
     Vector3 position = rotation * new Vector3(0f, 0f, -offsetDistance) + target.position;
 
+    // For some reason _myTransform is not accessible here
+    // So we have to use the regular transform
     transform.rotation = rotation;
     transform.position = position;
   }
